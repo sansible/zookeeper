@@ -1,0 +1,23 @@
+---
+
+zookeeper:
+  # Variables only for RedHat family
+  #url: https://archive.apache.org/dist/zookeeper/zookeeper-{{zookeeper_version}}/zookeeper-{{zookeeper_version}}.tar.gz
+  client_port: 2181
+  data_dir: /var/lib/zookeeper
+  dir: /opt/zookeeper-*version
+  hosts: "{{ ansible_fqdn }}:2181"
+  hosts: [ ]
+  log_dir: /var/log/zookeeper
+  log_level: WARN
+  maxClientCnxns: 60
+  monasca_download_dir: "/opt/monasca/"
+  run_mode: Deploy
+  version: &version 3.4.6
+  wait_for_period: 30
+
+  os_conf_dir:
+    Debian: "/etc/zookeeper/conf"
+
+  # Common
+  conf_dir: /etc/zookeeper/conf

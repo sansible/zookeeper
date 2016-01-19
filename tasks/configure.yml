@@ -1,0 +1,58 @@
+---
+
+- name: Setup zoo.cfg file
+  become: yes
+  template:
+    dest: "{{ zookeeper.conf_dir }}/zoo.cfg"
+    src: zoo.cfg.j2
+  notify:
+    - restart zookeeper
+
+- name: Setup myid
+  become: yes
+  template:
+    dest: "{{ zookeeper.conf_dir }}/myid"
+    src: myid.j2
+  notify:
+    - restart zookeeper
+
+- name: Setup environment
+  become: yes
+  template:
+    dest: "{{ zookeeper.conf_dir }}/environment"
+    src: environment.j2
+  notify:
+    - restart zookeeper
+
+- name: Create log_dir
+  become: yes
+  file:
+    path: "{{ zookeeper.log_dir }}"
+    state: directory
+    owner: zookeeper
+    group: zookeeper
+    mode: 755
+
+- name: Setup log4j
+  become: yes
+  template:
+    dest: "{{ zookeeper.conf_dir }}/log4j.properties"
+    owner: root
+    group: root
+    mode: 644
+    src: log4j.properties.j2
+  notify:
+    - restart zookeeper
+
+- name: Ensure Zookeeper is running
+  become: yes
+  service:
+    name: zookeeper
+    state: started
+    enabled: yes
+
+- name: wait for zookeeper port
+  wait_for:
+    port: "{{ zookeeper.client_port }}"
+    state: started
+    timeout: "{{ zookeeper.wait_for_period }}"

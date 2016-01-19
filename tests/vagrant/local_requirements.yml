@@ -1,0 +1,5 @@
+---
+
+- name: ansible-city.users_and_groups
+  src: https://github.com/ansible-city/users_and_groups.git
+  scm: git

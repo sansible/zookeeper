@@ -1,0 +1,10 @@
+{%- if zookeeper.id is defined -%}
+{{ zookeeper.id  }}
+{%- else -%}
+  {%- for url in zookeeper.hosts -%}
+    {%- set url_host = url.split(':')[0] -%}
+    {%- if url_host == ansible_fqdn or url_host in ansible_all_ipv4_addresses -%}
+{{ loop.index0  }}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}

@@ -1,0 +1,5 @@
+---
+
+- name: ansible-city.php
+  src: git+git@github.com:ansible-city/php.git
+  version: origin/master

@@ -1,0 +1,9 @@
+---
+
+- name: Install Zookeeper
+  sudo: yes
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - openjdk-7-jre-headless
+    - zookeeperd
