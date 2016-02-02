@@ -13,4 +13,4 @@
         - build
 
   roles:
-    - name: ansible-city.zookeeper
+    - role: ansible-city.zookeeper
