@@ -1,7 +1,7 @@
 # Zookeeper
 
-Master: ![Build Status](https://travis-ci.org/ansible-city/zookeeper.svg?branch=master)  
-Develop: ![Build Status](https://travis-ci.org/ansible-city/zookeeper.svg?branch=develop)
+Master: ![Build Status](https://travis-ci.org/sansible/zookeeper.svg?branch=master)  
+Develop: ![Build Status](https://travis-ci.org/sansible/zookeeper.svg?branch=develop)
 
 * [ansible.cfg](#ansible-cfg)
 * [Dependencies](#dependencies)
@@ -36,8 +36,8 @@ To install dependencies, add this to your roles.yml
 ```YAML
 ---
 
-- name: ansible-city.zookeeper
-  src: git+git@github.com:ansible-city/zookeeper.git
+- name: sansible.zookeeper
+  src: git+git@github.com:sansible/zookeeper.git
   version: origin/master # or any other tag/branch
 ```
 
@@ -72,5 +72,5 @@ This role uses two tags: **build** and **configure**
         - build
 
   roles:
-    - name: ansible-city.zookeeper
+    - name: sansible.zookeeper
 ```
