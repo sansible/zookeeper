@@ -8,14 +8,14 @@ test: test_deps vagrant_up
 integration_test: clean integration_test_deps vagrant_up clean
 
 test_deps:
-	rm -rf tests/vagrant/ansible-city.*
-	ln -s ../.. tests/vagrant/ansible-city.zookeeper
+	rm -rf tests/vagrant/sansible.*
+	ln -s ../.. tests/vagrant/sansible.zookeeper
 
 integration_test_deps:
 	sed -i.bak \
 		-E 's/(.*)version: (.*)/\1version: origin\/$(BRANCH)/' \
 		tests/vagrant/integration_requirements.yml
-	rm -rf tests/vagrant/ansible-city.*
+	rm -rf tests/vagrant/sansible.*
 	ansible-galaxy install -p tests/vagrant -r tests/vagrant/integration_requirements.yml
 	mv tests/vagrant/integration_requirements.yml.bak tests/vagrant/integration_requirements.yml
 
@@ -34,5 +34,5 @@ vagrant_ssh:
 	vagrant ssh
 
 clean:
-	rm -rf tests/vagrant/ansible-city.*
+	rm -rf tests/vagrant/sansible.*
 	cd tests/vagrant && vagrant destroy
