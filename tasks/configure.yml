@@ -1,58 +1,55 @@
 ---
 
-- name: Setup zoo.cfg file
-  become: yes
-  template:
-    dest: "{{ zookeeper.conf_dir }}/zoo.cfg"
-    src: zoo.cfg.j2
-  notify:
-    - restart zookeeper
-
 - name: Setup myid
   become: yes
+  become_user: "{{ zookeeper.user }}"
   template:
-    dest: "{{ zookeeper.conf_dir }}/myid"
+    dest: "{{ zookeeper.data_dir }}/myid"
     src: myid.j2
   notify:
     - restart zookeeper
 
-- name: Setup environment
+- name: Setup zoo.cfg file
   become: yes
+  become_user: "{{ zookeeper.user }}"
   template:
-    dest: "{{ zookeeper.conf_dir }}/environment"
-    src: environment.j2
+    dest: "{{ zookeeper.conf_dir }}/zoo.cfg"
+    mode: 0644
+    src: zoo.cfg.j2
   notify:
     - restart zookeeper
 
-- name: Create log_dir
+- name: Create Zookeeper log4j config
   become: yes
-  file:
-    path: "{{ zookeeper.log_dir }}"
-    state: directory
-    owner: zookeeper
-    group: zookeeper
-    mode: 755
-
-- name: Setup log4j
-  become: yes
+  become_user: "{{ zookeeper.user }}"
   template:
     dest: "{{ zookeeper.conf_dir }}/log4j.properties"
-    owner: root
-    group: root
-    mode: 644
+    mode: 0644
     src: log4j.properties.j2
   notify:
     - restart zookeeper
 
-- name: Ensure Zookeeper is running
+- name: Setup Zookeeper environment config
+  become: yes
+  become_user: "{{ zookeeper.user }}"
+  template:
+    dest: "{{ zookeeper.conf_dir }}/environment"
+    mode: 0644
+    src: environment.j2
+  notify:
+    - restart zookeeper
+
+- name: Start Zookeeper service
   become: yes
   service:
     name: zookeeper
     state: started
-    enabled: yes
 
-- name: wait for zookeeper port
+- name: Flush handlers to ensure Zookeeper is up to date
+  meta: flush_handlers
+
+- name: Wait for Zookeeper port
   wait_for:
     port: "{{ zookeeper.client_port }}"
     state: started
-    timeout: "{{ zookeeper.wait_for_period }}"
+    timeout: 30
