@@ -17,8 +17,8 @@ JAVA=/usr/bin/java
 ZOOMAIN="org.apache.zookeeper.server.quorum.QuorumPeerMain"
 ZOO_LOG4J_PROP="INFO,ROLLINGFILE"
 JMXLOCALONLY=false
-{% if zookeeper_heap_opt is defined %}
-JAVA_OPTS="{{ zookeeper.heap_opt  }}"
+{% if zookeeper.java_opts is defined %}
+JAVA_OPTS="{{ zookeeper.java_opts  }}"
 {% else %}
 JAVA_OPTS=""
 {% endif %}

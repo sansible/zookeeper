@@ -24,15 +24,6 @@
   notify:
     - restart zookeeper
 
-- name: Create log_dir
-  become: yes
-  file:
-    path: "{{ zookeeper.log_dir }}"
-    state: directory
-    owner: zookeeper
-    group: zookeeper
-    mode: 755
-
 - name: Setup log4j
   become: yes
   template:
@@ -50,6 +41,9 @@
     name: zookeeper
     state: started
     enabled: yes
+
+- name: Flush handlers to ensure Zookeeper is up to date
+  meta: flush_handlers
 
 - name: wait for zookeeper port
   wait_for:
