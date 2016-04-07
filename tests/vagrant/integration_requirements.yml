@@ -1,5 +1,4 @@
 ---
 
-- name: sansible.php
-  src: git+git@github.com:sansible/php.git
-  version: origin/master
+- src: sansible.users_and_groups
+  version: v1.0

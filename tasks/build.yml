@@ -1,9 +1,57 @@
 ---
 
-- name: Install Zookeeper
-  sudo: yes
+- name: Install Zookeeper and supporting packages
+  become: yes
   apt:
     name: "{{ item }}"
   with_items:
     - openjdk-7-jre-headless
-    - zookeeperd
+
+- name: Create Zookeeper directories
+  become: yes
+  become_user: "{{ zookeeper.user }}"
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ zookeeper.conf_dir }}"
+    - "{{ zookeeper.data_dir }}"
+    - "{{ zookeeper.log_dir }}"
+
+- name: Download ZooKeeper
+  become: yes
+  become_user: "{{ zookeeper.user }}"
+  get_url:
+    url: "http://www.mirrorservice.org/sites/ftp.apache.org/zookeeper/zookeeper-{{ zookeeper.version }}/zookeeper-{{ zookeeper.version }}.tar.gz"
+    dest: "/home/zookeeper/zookeeper-{{ zookeeper.version }}.tar.gz"
+
+- name: Unpack Zookeeper
+  become: yes
+  become_user: "{{ zookeeper.user }}"
+  unarchive:
+    copy: no
+    creates: "/home/zookeeper/zookeeper-{{ zookeeper.version }}"
+    dest: /home/zookeeper
+    src: "/home/zookeeper/zookeeper-{{ zookeeper.version }}.tar.gz"
+
+- name: Link to Zookeeper Directory
+  become: yes
+  become_user: "{{ zookeeper.user }}"
+  file:
+    dest: "{{ zookeeper.install_dir }}"
+    src: "/home/zookeeper/zookeeper-{{ zookeeper.version }}"
+    state: link
+
+- name: Create Zookeeper service
+  become: yes
+  template:
+    dest: /etc/init/zookeeper.conf
+    mode: 644
+    owner: root
+    src: zookeeper.service.j2
+
+- name: Ensure Zookeeper runs on boot
+  become: yes
+  service:
+    enabled: yes
+    name: zookeeper
