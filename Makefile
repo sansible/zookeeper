@@ -3,6 +3,12 @@ BRANCH?=$(shell git rev-parse --abbrev-ref HEAD)
 
 all: test clean
 
+watch: test_deps
+	while sleep 1; do \
+		find defaults/ handlers/ meta/ tasks/ templates/ tests/vagrant/test.yml \
+		| entr -d make vagrant_up; \
+	done
+
 test: test_deps vagrant_up
 
 integration_test: clean integration_test_deps vagrant_up clean
@@ -10,6 +16,7 @@ integration_test: clean integration_test_deps vagrant_up clean
 test_deps:
 	rm -rf tests/vagrant/sansible.*
 	ln -s ../.. tests/vagrant/sansible.zookeeper
+	ansible-galaxy install --force -p tests/vagrant -r tests/vagrant/local_requirements.yml
 
 integration_test_deps:
 	sed -i.bak \
