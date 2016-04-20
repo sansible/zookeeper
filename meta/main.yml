@@ -2,7 +2,7 @@
 
 galaxy_info:
   author: "Wojtek Oledzki"
-  description: "Install Apache Zookeeper server."
+  description: "Install Apache Zookeeper."
   license: MIT
   min_ansible_version: 1.9
   platforms:
@@ -12,4 +12,14 @@ galaxy_info:
   categories:
     - development
 
-dependencies: [ ]
+dependencies:
+  - role: sansible.users_and_groups
+    version: v1.0
+    users_and_groups:
+      groups:
+        - name: zookeeper
+      users:
+        - name: zookeeper
+          group: zookeeper
+    tags:
+      - build

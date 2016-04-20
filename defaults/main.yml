@@ -1,23 +1,29 @@
 ---
 
 zookeeper:
-  # Variables only for RedHat family
-  #url: https://archive.apache.org/dist/zookeeper/zookeeper-{{zookeeper_version}}/zookeeper-{{zookeeper_version}}.tar.gz
   client_port: 2181
-  data_dir: /var/lib/zookeeper
-  dir: /opt/zookeeper-*version
-  hosts: "{{ ansible_fqdn }}:2181"
-  hosts: [ ]
-  log_dir: /var/log/zookeeper
+  connect_port: 2888
+  conf_dir: /home/zookeeper/etc
+  data_dir: /home/zookeeper/lib
+  election_port: 3888
+  group: zookeeper
+  hosts:
+    - localhost
+  id: 1
+  install_dir: /home/zookeeper/zookeeper
+  java_opts: "-Xmx{{ (ansible_memtotal_mb / 2) | int }}m -Xms{{ (ansible_memtotal_mb / 2) | int }}m"
+  # note this is for application logs, not the actual zookeeper data logs
+  log_dir: /home/zookeeper/log
   log_level: WARN
-  maxClientCnxns: 60
-  monasca_download_dir: "/opt/monasca/"
-  run_mode: Deploy
-  version: &version 3.4.6
-  wait_for_period: 30
+  user: zookeeper
+  version: 3.4.8
 
-  os_conf_dir:
-    Debian: "/etc/zookeeper/conf"
-
-  # Common
-  conf_dir: /etc/zookeeper/conf
+  # If enabled AWS will be used to figure out which host and id should be used
+  # Note that you must install the AWS CLI tools on the machine to use this feature
+  aws_cluster_autodiscover:
+    enabled: false
+    # Tag to store the ID/index of the host that gets assigned to a machine
+    id_tag_name: ZookeeperID
+    # AWS CLI lookup filter
+    lookup_filter: "Name=tag:Environment,Values=dev Name=tag:Role,Values=zookeeper"
+    r53_zone_id: ~
