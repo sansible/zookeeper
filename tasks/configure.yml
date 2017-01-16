@@ -18,6 +18,9 @@
   args:
     chdir: "/home/{{ zookeeper.user }}/bin"
   register: aws_cluster_autodiscover
+  until: aws_cluster_autodiscover | success
+  retries: 2
+  delay: 15
   when: zookeeper.aws_cluster_autodiscover.enabled
 
 - name: Set autodiscover id based AWS autodiscover script
