@@ -4,7 +4,7 @@
 tickTime=2000
 # The number of ticks that the initial
 # synchronization phase can take
-initLimit=10
+initLimit=60
 # The number of ticks that can pass between
 # sending a request and getting an acknowledgement
 syncLimit=25
@@ -20,11 +20,11 @@ clientPort={{ zookeeper.client_port }}
 
 {#
 # specify all zookeeper servers
-# The fist port is used by followers to connect to the leader
+# The first port is used by followers to connect to the leader
 # The second one is used for leader election
 #}
 {% for url in zookeeper.hosts %}
-server.{{ loop.index}}={{url.split(':')[0] }}:2888:3888
+server.{{ loop.index }}={{ url.split(':')[0] }}:28{{ range(88,93)[loop.index-1] }}:38{{ range(88,93)[loop.index-1] }}
 {% endfor %}
 
 # To avoid seeks ZooKeeper allocates space in the transaction log file in
@@ -51,7 +51,10 @@ server.{{ loop.index}}={{url.split(':')[0] }}:2888:3888
 # coordinates updates. For higher update throughput at thes slight expense of
 # read throughput the leader can be configured to not accept clients and focus
 # on coordination.
-#leaderServes=yes
+leaderServes=yes
+
+# Election implementation to use
+electionAlg=3
 
 # Autopurge every hour to avoid using lots of disk in bursts
 # Order of the next 2 properties matters.
