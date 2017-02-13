@@ -26,5 +26,3 @@ zookeeper:
     id_tag_name: ZookeeperID
     # Ansible's ec2_remote_facts filter
     lookup_filter:
-      "tag:Environment": dev
-      "tag:role": zookeeper
