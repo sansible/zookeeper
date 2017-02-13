@@ -1,5 +1,5 @@
-{%- if zookeeper.aws_cluster_autodiscover.data is defined -%}
-{{ zookeeper.aws_cluster_autodiscover.data.id }}
+{%- if zookeeper.aws_cluster_autodiscover.enabled == true -%}
+{{ local_ec2_tags.tags.get(zookeeper.aws_cluster_autodiscover.id_tag_name) }}
 {%- else -%}
 {{ zookeeper.id }}
 {%- endif -%}

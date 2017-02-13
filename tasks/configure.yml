@@ -1,33 +1,42 @@
 ---
 
-- name: Copy AWS autodiscover script
+- name: Install AWS packages
   become: yes
-  become_user: "{{ zookeeper.user }}"
-  copy:
-    src: aws_cluster_autodiscover
-    dest: "/home/{{ zookeeper.user }}/bin/aws_cluster_autodiscover"
-    owner: "{{ zookeeper.user }}"
-    group: "{{ zookeeper.group }}"
-    mode: 0750
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - python-pip
+    - awscli
   when: zookeeper.aws_cluster_autodiscover.enabled
 
-- name: Run AWS autodiscover script and grab ID
+- name: Install Python libraries
   become: yes
-  become_user: "{{ zookeeper.user }}"
-  command: "./aws_cluster_autodiscover {{ zookeeper.hosts | join(',') }} {{ zookeeper.aws_cluster_autodiscover.r53_zone_id }} \"{{ zookeeper.aws_cluster_autodiscover.lookup_filter }}\" {{ zookeeper.aws_cluster_autodiscover.id_tag_name}}"
-  args:
-    chdir: "/home/{{ zookeeper.user }}/bin"
-  register: aws_cluster_autodiscover
-  until: aws_cluster_autodiscover | success
-  retries: 2
-  delay: 15
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - boto
   when: zookeeper.aws_cluster_autodiscover.enabled
 
-- name: Set autodiscover id based AWS autodiscover script
-  set_fact:
-    zookeeper:
-      aws_cluster_autodiscover:
-        data: "{{ aws_cluster_autodiscover.stdout | from_json }}"
+- name: Get local instance facts
+  become: yes
+  ec2_facts:
+  when: zookeeper.aws_cluster_autodiscover.enabled
+
+- name: Get local instance tags
+  become: yes
+  ec2_tag:
+    region: "{{ ansible_ec2_placement_region }}"
+    resource: "{{ ansible_ec2_instance_id }}"
+    state: list
+  register: local_ec2_tags
+  when: zookeeper.aws_cluster_autodiscover.enabled
+
+- name: Get remote zookeeper facts
+  become: yes
+  ec2_remote_facts:
+    filters: "{{ zookeeper.aws_cluster_autodiscover.lookup_filter }}"
+    region: "{{ ansible_ec2_placement_region }}"
+  register: remote_zookeeper_instances
   when: zookeeper.aws_cluster_autodiscover.enabled
 
 - name: Setup myid

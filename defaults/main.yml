@@ -24,6 +24,5 @@ zookeeper:
     enabled: false
     # Tag to store the ID/index of the host that gets assigned to a machine
     id_tag_name: ZookeeperID
-    # AWS CLI lookup filter
-    lookup_filter: "Name=tag:Environment,Values=dev Name=tag:Role,Values=zookeeper"
-    r53_zone_id: ~
+    # Ansible's ec2_remote_facts filter
+    lookup_filter:
