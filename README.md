@@ -7,6 +7,7 @@ Develop: ![Build Status](https://travis-ci.org/sansible/zookeeper.svg?branch=dev
 * [Dependencies](#dependencies)
 * [Tags](#tags)
 * [AWS Cluster Autodiscovery](#aws-cluster-autodiscovery)
+* [Zookeeper Check] (#zookeeper check)
 * [Examples](#examples)
 
 This roles installs Apache Zookeeper server.
@@ -66,6 +67,14 @@ claimed an ID/host.
 This script allows for a static set of hostnames with consistent IDs, the details of the machines that 
 claim these details can change, so no need for hardcoded IPs or network drives. As long as a machine is 
 recognised by the rest of the cluster then it will automatically join and sync with the other machines.
+
+
+
+
+## Zookeeper Check
+Purpose of the script is to confirm that all nodes have active conections during start and/or deployment.
+If node doesn't have any connections ZK process is restarted. If node receives connections sript only returns stats.
+Script can be also used to monitor nodes.
 
 
 
