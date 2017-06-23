@@ -28,12 +28,44 @@
     seconds: "{{ zookeeper.wait_for_server }}"
   when: zookeeper.aws_cluster_autodiscover.enabled
 
-- name: Set autodiscover id based AWS autodiscover script
+# Combine is used with set fact as successive calls to the module
+# seem to remove previous values added to hashes
+- name: Set cluster facts based on AWS autodiscover script output
   set_fact:
-    zookeeper:
-      aws_cluster_autodiscover:
-        data: "{{ aws_cluster_autodiscover.stdout | from_json }}"
+    zookeeper: "{{ zookeeper | combine( {
+        'aws_cluster_autodiscover': {
+          'data': aws_cluster_autodiscover.stdout | from_json
+        }
+      }, recursive=True) }}"
   when: zookeeper.aws_cluster_autodiscover.enabled
+
+- name: Assigned ID EC2 fact hunt
+  action: ec2_facts
+  register: ec2_vars
+  until: ec2_vars | success
+  retries: "{{ zookeeper.aws.retries }}"
+  delay: "{{ zookeeper.aws.delay }}"
+  when: zookeeper.aws_cluster_assigned_id.enabled
+
+- name: Assigned ID grab tags from EC2 instance
+  ec2_tag:
+    region: "{{ ansible_ec2_placement_region }}"
+    resource: "{{ ansible_ec2_instance_id }}"
+    state: list
+  register: assigned_id_instance_tags
+  when: ansible_ec2_instance_id is defined
+    and zookeeper.aws_cluster_assigned_id.enabled
+  retries: "{{ zookeeper.aws.retries }}"
+  delay: "{{ zookeeper.aws.delay }}"
+  until: assigned_id_instance_tags | success
+
+- name: Assigned ID set Broker ID
+  set_fact:
+    zookeeper: "{{ zookeeper | combine( {
+        'id': assigned_id_instance_tags.tags[zookeeper.aws_cluster_assigned_id.id_tag_name]
+      }, recursive=True) }}"
+  when: ansible_ec2_instance_id is defined
+    and zookeeper.aws_cluster_assigned_id.enabled
 
 - name: Setup Zookeeper environment config
   become: yes
