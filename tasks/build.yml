@@ -9,8 +9,9 @@
 
 - name: Create Zookeeper directories
   become: yes
-  become_user: "{{ zookeeper.user }}"
   file:
+    group: "{{ zookeeper.group }}"
+    owner: "{{ zookeeper.user }}"
     path: "{{ item }}"
     state: directory
   with_items:

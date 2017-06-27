@@ -4,10 +4,9 @@ Master: ![Build Status](https://travis-ci.org/sansible/zookeeper.svg?branch=mast
 Develop: ![Build Status](https://travis-ci.org/sansible/zookeeper.svg?branch=develop)
 
 * [ansible.cfg](#ansible-cfg)
-* [Dependencies](#dependencies)
+* [Installation and Dependencies](#installation-and-dependencies)
 * [Tags](#tags)
-* [AWS Cluster Autodiscovery](#aws-cluster-autodiscovery)
-* [Zookeeper Check](#zookeeper check)
+* [Zookeeper Check](#zookeeper-check)
 * [Examples](#examples)
 
 This roles installs Apache Zookeeper server.
@@ -30,8 +29,7 @@ hash_behaviour = merge
 
 
 
-
-## Dependencies
+## Installation and Dependencies
 
 To install dependencies, add this to your roles.yml
 
@@ -39,11 +37,64 @@ To install dependencies, add this to your roles.yml
 ---
 
 - name: sansible.zookeeper
-  src: git+git@github.com:sansible/zookeeper.git
-  version: origin/master # or any other tag/branch
+  version: v2.0
 ```
 
-and run `ansible-galaxy install -p . -r roles.yml`
+and run `ansible-galaxy install -p ./roles -r roles.yml`
+
+
+
+
+### AWS Setup
+
+This role has AWS support built in, it supports two methods for deployment/discovery.
+
+#### AWS Cluster Autodiscovery
+
+This method is designed for use with a single ASG controlling a cluster of Zookeeper
+instances, the idea being that instances can come and go without issue.
+
+The [AWS Autodiscover script](/files/aws_cluster_autodiscover) allows machines to pick an
+ID and hostname/Route53 entry from a predefined list, AWS tags are used to mark machines
+that have claimed an ID/host.
+
+This script allows for a static set of hostnames with consistent IDs to be maintained
+accross a dynamic set of instances in an ASG.
+
+```YAML
+- role: sansible.zookeeper
+  zookeeper:
+    aws_cluster_autodiscover:
+      enabled: true
+      lookup_filter: "Name=tag:Environment,Values=dev Name=tag:Role,Values=zookeeper"
+      r53_zone_id: xxxxxxxx
+    # List of hosts by id for each ZK instance
+    hosts:
+      - 01.zookeeper.app.internal
+      - 02.zookeeper.app.internal
+      - 03.zookeeper.app.internal
+```
+
+#### AWS Tag Discovery
+
+Designed for instances that are stacially defined either as direct EC2 instances or
+via a single ASG per instance.
+
+The broker.id is derived from a tag attached to the instance, you can turn on this
+behaviour and specify the tag to lookup like so:
+
+```YAML
+- role: sansible.zookeeper
+  zookeeper:
+    aws_cluster_assigned_id:
+      enabled: true
+      id_tag_name: instanceindex
+    # List of hosts by id for each ZK instance
+    hosts:
+      - 01.zookeeper.app.internal
+      - 02.zookeeper.app.internal
+      - 03.zookeeper.app.internal
+```
 
 
 
@@ -58,20 +109,8 @@ This role uses two tags: **build** and **configure**
 
 
 
-## AWS Cluster Autodiscovery
-
-The [AWS Autodiscover script](/files/aws_cluster_autodiscover) allows machines to pick an
-ID and a hostname from a predefined list, AWS tags are used to mark machines that have
-claimed an ID/host.
-
-This script allows for a static set of hostnames with consistent IDs, the details of the machines that
-claim these details can change, so no need for hardcoded IPs or network drives. As long as a machine is
-recognised by the rest of the cluster then it will automatically join and sync with the other machines.
-
-
-
-
 ## Zookeeper Check
+
 Purpose of the script is to confirm that all nodes have active conections during start and/or deployment.
 If node doesn't have any connections ZK process is restarted. If node receives connections sript only returns stats.
 Script can be also used to monitor nodes.
