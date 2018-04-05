@@ -1,5 +1,5 @@
-{%- if zookeeper.aws_cluster_autodiscover.data is defined -%}
-{{ zookeeper.aws_cluster_autodiscover.data.id }}
+{%- if sansible_zookeeper_aws_cluster_autodiscover_data is defined -%}
+{{ sansible_zookeeper_aws_cluster_autodiscover_data.id }}
 {%- else -%}
-{{ zookeeper.id }}
+{{ sansible_zookeeper_id }}
 {%- endif -%}

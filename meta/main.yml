@@ -1,22 +1,26 @@
 ---
 
 galaxy_info:
-  author: "Wojtek Oledzki"
   description: "Install Apache Zookeeper."
   license: MIT
-  min_ansible_version: 2.0
+  min_ansible_version: 2.2
   platforms:
     - name: Ubuntu
       versions:
         - trusty
+        - xenial
+        - bionic
   categories:
     - development
 
 dependencies:
   - role: sansible.users_and_groups
-    users_and_groups:
-      groups:
-        - name: zookeeper
-      users:
-        - name: zookeeper
-          group: zookeeper
+    sansible_users_and_groups_groups:
+      - name: "{{ sansible_zookeeper_group }}"
+    sansible_users_and_groups_users:
+      - name: "{{ sansible_zookeeper_user }}"
+        group: "{{ sansible_zookeeper_group }}"
+
+  - role: sansible.java
+    sansible_java_vendor: "{{ sansible_zookeeper_java_vendor }}"
+    sansible_java_version: "{{ sansible_zookeeper_java_version }}"

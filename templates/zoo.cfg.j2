@@ -1,20 +1,20 @@
 # http://hadoop.apache.org/zookeeper/docs/current/zookeeperAdmin.html
 
 # The number of milliseconds of each tick
-tickTime={{ zookeeper.tick_time }}
+tickTime={{ sansible_zookeeper_tick_time }}
 # The number of ticks that the initial
 # synchronization phase can take
-initLimit={{ zookeeper.init_limit }}
+initLimit={{ sansible_zookeeper_init_limit }}
 # The number of ticks that can pass between
 # sending a request and getting an acknowledgement
-syncLimit={{ zookeeper.sync_limit }}
+syncLimit={{ sansible_zookeeper_sync_limit }}
 # the directory where the snapshot is stored.
-dataDir={{ zookeeper.data_dir }}
+dataDir={{ sansible_zookeeper_data_dir }}
 # Place the dataLogDir to a separate physical disc for better performance
 # dataLogDir=/disk2/zookeeper
 
 # the port at which the clients will connect
-clientPort={{ zookeeper.client_port }}
+clientPort={{ sansible_zookeeper_client_port }}
 
 # Maximum number of clients that can connect from one client
 {#
@@ -22,8 +22,8 @@ clientPort={{ zookeeper.client_port }}
 # The first port is used by followers to connect to the leader
 # The second one is used for leader election
 #}
-{% for url in zookeeper.hosts %}
-server.{{ loop.index }}={{ url }}:{{ zookeeper.connect_port }}:{{ zookeeper.election_port }}
+{% for url in sansible_zookeeper_hosts %}
+server.{{ loop.index }}={{ url }}:{{ sansible_zookeeper_connect_port }}:{{ sansible_zookeeper_election_port }}
 {% endfor %}
 
 # To avoid seeks ZooKeeper allocates space in the transaction log file in

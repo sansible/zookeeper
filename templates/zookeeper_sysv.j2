@@ -1,0 +1,85 @@
+### BEGIN INIT INFO
+# Provides:          zookeeper
+# Required-Start:    $network $remote_fs $syslog
+# Required-Stop:     $network $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: start zookeeper
+### END INIT INFO
+
+set -e
+
+PATH=/usr/bin:/usr/sbin:/bin:/sbin
+DESC="centralized service for maintaining configuration information"
+NAME=zookeeper
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+[ -r {{ sansible_zookeeper_conf_dir }}/environment ] && . {{ sansible_zookeeper_conf_dir }}/environment
+
+[ -r /etc/default/zookeeper ] && . /etc/default/zookeeper
+
+[ -d $ZOO_LOG_DIR ] || mkdir -p $ZOO_LOG_DIR
+chown $USER:$GROUP $ZOO_LOG_DIR
+
+[ -z "$JMXDISABLE" ] && JAVA_OPTS="$JAVA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=$JMXLOCALONLY"
+
+. /lib/lsb/init-functions
+if [ -f /etc/default/rcS ]; then
+  . /etc/default/rcS
+fi
+
+do_start()
+{
+	exec start-stop-daemon --start -c $USER --exec $JAVA --name $NAME \
+        --background --pidfile $PIDFILE -- -cp $CLASSPATH $JAVA_OPTS \
+        -Dzookeeper.log.dir=${ZOO_LOG_DIR} \
+		-Dzookeeper.root.logger=${ZOO_LOG4J_PROP} $ZOOMAIN $ZOOCFG \
+		|| return 2
+}
+
+do_stop () {
+    :
+}
+
+case "$1" in
+  start)
+    if [ "$VERBOSE" != no ]; then
+      log_begin_msg "Starting $NAME..."
+    fi
+    do_start
+    if [ "$VERBOSE" != no ]; then
+      log_end_msg 0
+    fi
+  ;;
+
+  restart)
+    if [ "$VERBOSE" != no ]; then
+      log_begin_msg "Restarting $NAME..."
+    fi
+    do_stop
+    do_start
+    if [ "$VERBOSE" != no ]; then
+      log_end_msg 0
+    fi  ;;
+
+  stop)
+    if [ "$VERBOSE" != no ]; then
+      log_begin_msg "Stopping $NAME..."
+    fi
+    do_stop
+    if [ "$VERBOSE" != no ]; then
+      log_end_msg 0
+    fi
+  ;;
+
+  status)
+    status_of_proc $JAVA $NAME
+  ;;
+  *)
+    log_success_msg "Usage: $SCRIPTNAME {start|stop|status|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0
