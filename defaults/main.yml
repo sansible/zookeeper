@@ -24,6 +24,7 @@ sansible_zookeeper_java_vendor: openjdk
 sansible_zookeeper_java_version: 8
 sansible_zookeeper_log_dir: /home/zookeeper/log
 sansible_zookeeper_log_level: WARN
+sansible_zookeeper_max_open_files: 4098
 sansible_zookeeper_sync_limit: 25
 sansible_zookeeper_tick_time: 2000
 sansible_zookeeper_user: zookeeper
