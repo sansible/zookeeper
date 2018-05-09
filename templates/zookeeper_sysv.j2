@@ -31,11 +31,14 @@ fi
 
 do_start()
 {
-	exec start-stop-daemon --start -c $USER --exec $JAVA --name $NAME \
+  if [ -n "$MAX_OPEN_FILES" ]; then
+    ulimit -n $MAX_OPEN_FILES
+  fi
+  exec start-stop-daemon --start -c $USER --exec $JAVA --name $NAME \
         --background --pidfile $PIDFILE -- -cp $CLASSPATH $JAVA_OPTS \
         -Dzookeeper.log.dir=${ZOO_LOG_DIR} \
-		-Dzookeeper.root.logger=${ZOO_LOG4J_PROP} $ZOOMAIN $ZOOCFG \
-		|| return 2
+    -Dzookeeper.root.logger=${ZOO_LOG4J_PROP} $ZOOMAIN $ZOOCFG \
+    || return 2
 }
 
 do_stop () {
