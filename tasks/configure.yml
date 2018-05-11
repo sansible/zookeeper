@@ -61,9 +61,7 @@
 
 - name: Assigned ID set Broker ID
   set_fact:
-    zookeeper: "{{ zookeeper | combine( {
-        'id': assigned_id_instance_tags.tags[sansible_zookeeper_aws_cluster_assigned_id_tag_name]
-      }, recursive=True) }}"
+    sansible_zookeeper_aws_cluster_assigned_id: "{{ assigned_id_instance_tags.tags[sansible_zookeeper_aws_cluster_assigned_id_tag_name] }}"
   when: ansible_ec2_instance_id is defined
     and sansible_zookeeper_aws_cluster_assigned_id_enabled
 
@@ -109,6 +107,7 @@
 - name: Start Zookeeper service
   become: yes
   service:
+    enabled: yes
     name: zookeeper
     state: started
 
