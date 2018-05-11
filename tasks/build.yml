@@ -44,9 +44,3 @@
     mode: 0755
     owner: root
     src: zookeeper_sysv.j2
-
-- name: Ensure Zookeeper runs on boot
-  become: yes
-  service:
-    enabled: yes
-    name: zookeeper
