@@ -17,5 +17,5 @@ JAVA=/usr/bin/java
 ZOOMAIN="org.apache.zookeeper.server.quorum.QuorumPeerMain"
 ZOO_LOG4J_PROP="INFO,ROLLINGFILE"
 JMXLOCALONLY=false
-JAVA_OPTS="{{ sansible_zookeeper_java_opts | default() }}"
+JAVA_OPTS="{{ sansible_zookeeper_java_opts | default('') }}"
 MAX_OPEN_FILES="{{ sansible_zookeeper_max_open_files }}"
