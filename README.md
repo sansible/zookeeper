@@ -22,7 +22,7 @@ To install dependencies, add this to your roles.yml
 ---
 
 - name: sansible.zookeeper
-  version: v3.0
+  version: v3.2.0
 ```
 
 and run `ansible-galaxy install -p ./roles -r roles.yml`
