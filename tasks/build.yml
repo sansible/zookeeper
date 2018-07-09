@@ -17,7 +17,7 @@
   become: yes
   become_user: "{{ sansible_zookeeper_user }}"
   get_url:
-    url: "http://www.mirrorservice.org/sites/ftp.apache.org/zookeeper/zookeeper-{{ sansible_zookeeper_version }}/zookeeper-{{ sansible_zookeeper_version }}.tar.gz"
+    url: "{{ sansible_zookeeper_download_url }}"
     dest: "/home/{{ sansible_zookeeper_user }}/zookeeper-{{ sansible_zookeeper_version }}.tar.gz"
 
 - name: Unpack Zookeeper
