@@ -40,7 +40,7 @@
   when: sansible_zookeeper_aws_cluster_autodiscover_enabled == true
 
 - name: Assigned ID EC2 fact hunt
-  action: ec2_facts
+  action: ec2_instance_metadata
   register: ec2_vars
   until: ec2_vars is succeeded
   retries: "{{ sansible_zookeeper_aws_retries }}"

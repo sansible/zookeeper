@@ -44,3 +44,10 @@
     mode: 0755
     owner: root
     src: zookeeper_sysv.j2
+
+- name: Create zookeeper startup links
+  become: yes
+  command: update-rc.d zookeeper defaults
+  args:
+    creates: "/etc/rc0.d/K??zookeeper"
+  when: ansible_distribution_release == "bionic"
