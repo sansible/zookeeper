@@ -69,7 +69,7 @@ this behaviour and specify the tag to lookup like so:
 ```YAML
 - role: sansible.zookeeper
   sansible_zookeeper_aws_cluster_assigned_id_enabled: yes
-  sansible_zookeeper_aws_cluster_autodiscover_id_tag_name: instanceindex
+  sansible_zookeeper_aws_cluster_assigned_id_tag_name: instanceindex
   sansible_zookeeper_hosts:
     - 01.zookeeper.app.internal
     - 02.zookeeper.app.internal
