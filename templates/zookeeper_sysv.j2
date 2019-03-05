@@ -98,7 +98,7 @@ do_stop()
     if [ -e ${PIDFILE} ]; then
         status_of_proc -p $PIDFILE "$NAME" "$NAME" && status="0" || status="$?"
         if [ "$status" = "0" ]; then
-            start-stop-daemon --user $USER --chuid $USER:$USER --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE
+            start-stop-daemon --user $USER --chuid $USER:$GROUP --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE
             RETVAL="$?"
             [ "$RETVAL" = 2 ] && return 2
 
