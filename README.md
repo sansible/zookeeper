@@ -22,11 +22,12 @@ To install dependencies, add this to your roles.yml
 ---
 
 - name: sansible.zookeeper
-  version: v3.2.0
+  version: v4.0.0
 ```
 
 and run `ansible-galaxy install -p ./roles -r roles.yml`
 
+NOTE: `package versions >= 4.0` only support `zookeeper >= 3.5.8`
 
 ### AWS Setup
 
@@ -55,6 +56,7 @@ maintained accross a dynamic set of instances in an ASG.
     - 01.zookeeper.app.internal
     - 02.zookeeper.app.internal
     - 03.zookeeper.app.internal
+  sansible_zookeeper_version: 3.5.8
 ```
 
 
