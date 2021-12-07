@@ -12,7 +12,7 @@ sansible_zookeeper_client_port: 2181
 sansible_zookeeper_conf_dir: /home/zookeeper/etc
 sansible_zookeeper_connect_port: 2888
 sansible_zookeeper_data_dir: /home/zookeeper/lib
-sansible_zookeeper_download_url: "http://apache.mirror.anlx.net/zookeeper/zookeeper-{{ sansible_zookeeper_version }}/zookeeper-{{ sansible_zookeeper_version }}.tar.gz"
+sansible_zookeeper_download_url: "http://apache.mirror.anlx.net/zookeeper/zookeeper-{{ sansible_zookeeper_version }}/apache-zookeeper-{{ sansible_zookeeper_version }}-bin.tar.gz"
 sansible_zookeeper_election_port: 3888
 sansible_zookeeper_group: zookeeper
 sansible_zookeeper_hosts:
@@ -29,5 +29,5 @@ sansible_zookeeper_max_open_files: 4098
 sansible_zookeeper_sync_limit: 25
 sansible_zookeeper_tick_time: 2000
 sansible_zookeeper_user: zookeeper
-sansible_zookeeper_version: 3.4.14
+sansible_zookeeper_version: 3.5.9
 sansible_zookeeper_wait_for_server: 60
