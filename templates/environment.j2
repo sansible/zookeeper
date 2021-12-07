@@ -4,7 +4,7 @@ NAME=zookeeper
 ZOOCFGDIR={{ sansible_zookeeper_conf_dir }}
 ZOODIR={{ sansible_zookeeper_install_dir }}
 
-CLASSPATH="$ZOOCFGDIR:$ZOODIR/zookeeper-{{ sansible_zookeeper_version }}.jar:{{ sansible_zookeeper_classpath | default('$ZOODIR/lib/*') }}"
+CLASSPATH="$ZOOCFGDIR:$ZOODIR/lib/zookeeper-{{ sansible_zookeeper_version }}.jar:{{ sansible_zookeeper_classpath | default('$ZOODIR/lib/*') }}"
 
 ZOOCFG="$ZOOCFGDIR/zoo.cfg"
 ZOO_LOG_DIR={{ sansible_zookeeper_log_dir }}

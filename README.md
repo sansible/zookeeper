@@ -22,11 +22,15 @@ To install dependencies, add this to your roles.yml
 ---
 
 - name: sansible.zookeeper
-  version: v3.2.0
+  version: v4.0.0
 ```
 
 and run `ansible-galaxy install -p ./roles -r roles.yml`
 
+### Breaking change
+
+sansible/zookeper v4.0.0 adds support for zookeeper 4.x and breaks
+zookeeper 3.4.x and earlier
 
 ### AWS Setup
 

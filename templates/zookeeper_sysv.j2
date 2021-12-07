@@ -20,7 +20,7 @@ set -e
 
 # Exit if the package is not installed
 # Test that libzookeeper-java is installed
-[ -r "{{ sansible_zookeeper_install_dir }}/zookeeper-{{ sansible_zookeeper_version }}.jar" ] || exit 0
+[ -r "{{ sansible_zookeeper_install_dir }}/lib/zookeeper-{{ sansible_zookeeper_version }}.jar" ] || exit 0
 # Test that zookeeper is installed and not purged
 [ -r "{{ sansible_zookeeper_conf_dir }}/environment" ] || exit 0
 . {{ sansible_zookeeper_conf_dir }}/environment
