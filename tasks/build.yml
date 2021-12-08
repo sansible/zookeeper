@@ -18,23 +18,23 @@
   become_user: "{{ sansible_zookeeper_user }}"
   get_url:
     url: "{{ sansible_zookeeper_download_url }}"
-    dest: "/home/{{ sansible_zookeeper_user }}/zookeeper-{{ sansible_zookeeper_version }}.tar.gz"
+    dest: "/home/{{ sansible_zookeeper_user }}/apache-zookeeper-{{ sansible_zookeeper_version }}-bin.tar.gz"
 
 - name: Unpack Zookeeper
   become: yes
   become_user: "{{ sansible_zookeeper_user }}"
   unarchive:
     copy: no
-    creates: "/home/{{ sansible_zookeeper_user }}/zookeeper-{{ sansible_zookeeper_version }}"
+    creates: "/home/{{ sansible_zookeeper_user }}/apache-zookeeper-{{ sansible_zookeeper_version }}-bin"
     dest: "/home/{{ sansible_zookeeper_user }}"
-    src: "/home/{{ sansible_zookeeper_user }}/zookeeper-{{ sansible_zookeeper_version }}.tar.gz"
+    src: "/home/{{ sansible_zookeeper_user }}/apache-zookeeper-{{ sansible_zookeeper_version }}-bin.tar.gz"
 
 - name: Link to Zookeeper Directory
   become: yes
   become_user: "{{ sansible_zookeeper_user }}"
   file:
     dest: "{{ sansible_zookeeper_install_dir }}"
-    src: "/home/{{ sansible_zookeeper_user }}/zookeeper-{{ sansible_zookeeper_version }}"
+    src: "/home/{{ sansible_zookeeper_user }}/apache-zookeeper-{{ sansible_zookeeper_version }}-bin"
     state: link
 
 - name: Create Zookeeper service
